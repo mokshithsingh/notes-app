@@ -27,6 +27,21 @@ npm run dev               # or: npm start
 
 Open **http://localhost:5000** (or the `PORT` you set).
 
+## Deploying with Docker
+
+The app and its own PostgreSQL run as a Docker Compose project named `notes`.
+Tables are created automatically when the app starts.
+
+```bash
+git clone https://github.com/mokshithsingh/notes-app.git notes && cd notes
+cp .env.example .env      # set DB_PASSWORD, JWT_SECRET (openssl rand -hex 64), Faultline settings
+docker compose up -d --build
+```
+
+Open **http://&lt;server-ip&gt;:4210** (change with `NOTES_PORT`). Update later with `git pull && docker compose up -d --build`.
+
+> Never run `docker compose down -v`: `-v` deletes the database and uploaded files.
+
 ## Test cards
 Payments run in test mode. Use any future expiry date, any 3-digit CVC and any name.
 
