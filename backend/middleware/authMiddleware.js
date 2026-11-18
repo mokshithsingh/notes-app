@@ -1,8 +1,12 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
+// Name of the login cookie. Not plain "token": browsers share cookies between
+// ports on the same host, and Faultline (same server, port 4200) already uses "token".
+const AUTH_COOKIE_NAME = 'notes_token';
+
 let authMiddleware = (req, res, next) => {
-    const token = req.cookies.token;
+    const token = req.cookies[AUTH_COOKIE_NAME];
 
     if (!token) {
         return res.status(401).json({message : "Missing token"});
@@ -19,3 +23,4 @@ let authMiddleware = (req, res, next) => {
 }
 
 exports.authMiddleware = authMiddleware;
+exports.AUTH_COOKIE_NAME = AUTH_COOKIE_NAME;

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { pool } = require('../config/db.js');
 const { isPro } = require('../utils/plans');
+const { AUTH_COOKIE_NAME } = require('../middleware/authMiddleware');
 
 const TOKEN_MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000; // 14 days
 
@@ -18,7 +19,7 @@ function cookieOptions(req) {
 
 function setAuthCookie(req, res, userId) {
     const token = jwt.sign({id : userId}, process.env.JWT_SECRET, {expiresIn : '14d'});
-    res.cookie('token', token, {...cookieOptions(req), maxAge : TOKEN_MAX_AGE_MS});
+    res.cookie(AUTH_COOKIE_NAME, token, {...cookieOptions(req), maxAge : TOKEN_MAX_AGE_MS});
 }
 
 let register = async(req, res, next) => {
@@ -85,7 +86,7 @@ let login = async(req, res, next) => {
 }
 
 let logout = (req, res) => {
-    res.clearCookie('token', cookieOptions(req));
+    res.clearCookie(AUTH_COOKIE_NAME, cookieOptions(req));
 
     res.status(200).json({message : "Cookie cleared successfully"});
 }
